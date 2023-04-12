@@ -2,6 +2,7 @@ package link
 
 import (
 	"io"
+	"strings"
 
 	"golang.org/x/net/html"
 )
@@ -35,8 +36,24 @@ func buildLink(n *html.Node) Link {
 			break
 		}
 	}
-	retVal.Text = "TODO: extract link text"
+	retVal.Text = text(n)
 	return retVal
+}
+
+func text(n *html.Node) string {
+	if n.Type == html.TextNode {
+		return n.Data
+	}
+	// comments etc.
+	if n.Type != html.ElementNode {
+		return ""
+	}
+
+	var result string
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		result += text(c) + " "
+	}
+	return strings.Join(strings.Fields(result), " ")
 }
 
 func linkNodes(n *html.Node) []*html.Node {
