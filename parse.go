@@ -51,7 +51,7 @@ func text(n *html.Node) string {
 
 	var result string
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		result += text(c) + " "
+		result += text(c)
 	}
 	return strings.Join(strings.Fields(result), " ")
 }
